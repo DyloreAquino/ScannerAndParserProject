@@ -1,13 +1,35 @@
 #include "token.h"
 
 /* names of tokens for display (space padding ensures neat formatting)*/
-// TODO: Edit this for tokens
-const char *tokennames[] =
-{
-       "Error ", // First one should be error
-       "Assign",
-       "Plus  ",
-       "Equals",
-       "", // due to the token being 5, there's smth here to get the actual name
-       "Minus "
+const char *tokennames[] = {
+    "Error       ",
+    "Assign      ",
+    "Semicolon   ",
+    "Comma       ",
+    "LeftParen   ",
+    "RightParen  ",
+    "String      ",
+    "Plus        ",
+    "Minus       ",
+    "Raise       ",
+    "Equal       ",
+    "LTEqual     ",
+    "GTEqual     ",
+    "NotEqual    ",
+    "Identifier  ",
+    "Number      ",
+    "Multiply    ",
+    "Divide      ",
+    "Colon       ",
+    "LessThan    ",
+    "GreaterThan ",
+    "PRINT       ",
+    "IF          ",
+    "ELSE        ",
+    "ENDIF       ",
+    "SQRT        ",
+    "AND         ",
+    "OR          ",
+    "NOT         ",
+    "EndOfFile   " 
 };
