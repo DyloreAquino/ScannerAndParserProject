@@ -9,6 +9,7 @@
 
 /* character classes */
 // TODO: Add character classes
+#define LETTER       0
 #define DIGIT        0
 #define PLUS         1
 #define NEWLINE      2

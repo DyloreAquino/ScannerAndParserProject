@@ -14,11 +14,13 @@ void parseerror(char *message)
 
 struct token currenttoken;
 
+// Checks if the next token is the token we need
+// Prints the token and the lexeme
 void match(int tokenid)
 {
 	if (currenttoken.id == tokenid)
 	{
-		printf("match %s (%s)\n", tokennames[tokenid],currenttoken.lexeme);
+		printf("match %s (%s)\n", tokennames[tokenid], currenttoken.lexeme);
 		currenttoken = gettoken();
 	}
 	else

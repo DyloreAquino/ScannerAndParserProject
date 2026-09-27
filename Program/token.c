@@ -4,10 +4,10 @@
 // TODO: Edit this for tokens
 const char *tokennames[] =
 {
-       "Error ",
-       "Number",
+       "Error ", // First one should be error
+       "Assign",
        "Plus  ",
        "Equals",
        "", // due to the token being 5, there's smth here to get the actual name
-       "Minus ",
+       "Minus "
 };
