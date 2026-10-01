@@ -11,8 +11,8 @@ int errorcount = 0;
 void parseerror(char *message)
 {
 	errorcount++;
-	printf("Symbol %s expected\n", message);
-//    exit(0);
+	printf("Parse error: %s expected (line #%i)\n", message, getlinenumber());
+  exit(0);
 }
 
 struct token currenttoken;
@@ -281,7 +281,7 @@ void Rel()
 int main(int argc, char** argv)
 {
    char filename[50];
-   strcpy(filename, "../Tests/InputFiles/sample1-quad-formula.txt");
+   strcpy(filename, "../Tests/InputFiles/sample2-just-tokens.txt");
    if (argc >= 2)
       strcpy(filename, argv[1]);
    openfile(filename);
