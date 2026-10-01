@@ -11,7 +11,7 @@ char current_state[10] = "none";
 void parseerror(char *message)
 {
 	printf("Parse error: %s expected. (line #%i)\n", message, getlinenumber());
-  exit(0);
+	exit(0);
 }
 
 struct token currenttoken;
@@ -251,14 +251,27 @@ void Rel()
 
 int main(int argc, char** argv)
 {
-   char filename[50];
-   strcpy(filename, "sample_input.txt");
-   if (argc >= 2)
-      strcpy(filename, argv[1]);
-   openfile(filename);
-   currenttoken = gettoken();
-   Prg();
-	 printf("%s is a valid SimpCalc program\n", filename);
-   return 0;
+    char filename[50];
+    if (argc >= 2)
+    {
+	    for (int i = 1; i < argc; i++)
+	    {
+			strcpy(filename, argv[i]);
+			openfile(filename);
+			freopen(strcat(filename, "_output.txt"), "a+", stdout);
+			currenttoken = gettoken();
+			Prg();
+			printf("%s is a valid SimpCalc program\n", filename);
+	    }
+    }
+	else
+	{
+		strcpy(filename, "sample_input.txt");
+		openfile(filename);
+		currenttoken = gettoken();
+		Prg();
+		printf("%s is a valid SimpCalc program\n", filename);
+	}
+   
+	return 0;
 }
-
