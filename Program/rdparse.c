@@ -6,12 +6,11 @@
 #include <string.h>
 #include "scan.h"
 
-int errorcount = 0;
+char current_state[10] = "none";
 
 void parseerror(char *message)
 {
-	errorcount++;
-	printf("Parse error: %s expected (line #%i)\n", message, getlinenumber());
+	printf("Parse error: %s (line #%i)\n", message, getlinenumber());
   exit(0);
 }
 
@@ -23,14 +22,23 @@ void match(int tokenid)
 {
 	if (currenttoken.id != tokenid)
 	{
-		parseerror(tokennames[tokenid]);
+		char msg[100];
+
+		if (strcmp(current_state, "stm") == 0)
+			printf("Invalid Statement\n");
+		else if (strcmp(current_state, "iffollow") == 0)
+			printf("Incomplete if statement\n");
+		
+		strcpy(msg, tokennames[tokenid]);
+		strcat(msg, " expected.");
+		parseerror(msg);
 	}
 	currenttoken = gettoken();
 }
 
 void Prg()
 {
-	Blk(); match(TokenEndOfFile);	
+	Blk(); match(TokenEndOfFile);
 }
 
 void Blk()
@@ -47,23 +55,14 @@ void Blk()
 
 void Stm()
 {
-	int currenterror = errorcount;
-
+	strcpy(current_state, "stm");
 	if (currenttoken.id == TokenIdentifier)
 	{
 		match(TokenIdentifier);
 		match(TokenAssign);
 		Exp();
 		match(TokenSemicolon);
-
-		if (errorcount == currenterror)
-		{
-			printf("Assignment Statement Recognized\n");
-		}
-		else
-		{
-			printf("Invalid Statement\n");
-		}
+		printf("Assignment Statement Recognized\n");
 	}
 	else if (currenttoken.id == TokenPRINT)
 	{
@@ -73,15 +72,7 @@ void Stm()
 		Argfollow();
 		match(TokenRightParen);
 		match(TokenSemicolon);
-
-		if (errorcount == currenterror)
-		{
-			printf("Print Statement Recognized\n");
-		}
-		else
-		{
-			printf("Invalid Statement\n");
-		}
+		printf("Print Statement Recognized\n");
 	}
 	else if (currenttoken.id == TokenIF)
 	{
@@ -91,21 +82,12 @@ void Stm()
 		match(TokenColon);
 		Blk();
 		Iffollow();
-		
-		if (errorcount == currenterror)
-		{
-			printf("If Statement Ends\n");
-		}
-		else
-		{
-			printf("Invalid Statement\n");
-		}
+		printf("If Statement Ends\n");
 	}
-	else
-	{
+	else {
 		printf("Invalid Statement\n");
-		currenttoken = gettoken();
 	}
+	strcpy(current_state, "none");
 }
 
 void Argfollow()
@@ -132,20 +114,16 @@ void Arg()
 
 void Iffollow()
 {
+	strcpy(current_state, "iffollow");
 	if (currenttoken.id == TokenELSE)
 	{
 		match(TokenELSE);
 		Blk();
 	}
 
-	int currenterror = errorcount;
 	match(TokenENDIF);
 	match(TokenSemicolon);
-
-	if (errorcount != currenterror)
-	{
-		printf("Incomplete if Statement\n");
-	}
+	strcpy(current_state, "none");
 }
 
 void Exp()
@@ -272,8 +250,7 @@ void Rel()
 			break;
 		
 		default:
-			parseerror("relational operator");
-			printf("Missing relational operator");
+			printf("Missing relational operator\n");
 			break;
 	}
 }
@@ -281,12 +258,13 @@ void Rel()
 int main(int argc, char** argv)
 {
    char filename[50];
-   strcpy(filename, "../Tests/InputFiles/sample2-just-tokens.txt");
+   strcpy(filename, "../Tests/InputFiles/samp3.txt");
    if (argc >= 2)
       strcpy(filename, argv[1]);
    openfile(filename);
    currenttoken = gettoken();
    Prg();
+	 printf("%s is a valid SimpCalc program\n", filename);
    return 0;
 }
 
