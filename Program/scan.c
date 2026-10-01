@@ -8,7 +8,6 @@
 #include "scan.h"
 
 /* character classes */
-// TODO: Add character classes
 #define LETTER             0
 #define DIGIT              1
 #define NEWLINE            2
