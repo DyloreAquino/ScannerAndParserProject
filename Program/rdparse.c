@@ -1,5 +1,5 @@
-
-/* this program computes sums based on the text file input */
+// Parser module by Jerold Aquino and Andre Dorde
+/* this program is the main paser */
 
 #include <stdlib.h> 
 #include <stdio.h>
@@ -7,14 +7,13 @@
 #include <setjmp.h>
 #include "scan.h"
 
-jmp_buf errjmp;
-
-char current_state[10] = "none";
+jmp_buf errjmp; // This is important for letting the program continue
+// even after getting a parse error, instead of just outright exiting
 
 void parseerror(char *message)
 {
 	printf("Parse error: %s expected. (line #%i)\n", message, getlinenumber());
-	longjmp(errjmp, 1);
+	longjmp(errjmp, 1); // Jump back to getting a new file
 }
 
 struct token currenttoken;
@@ -78,7 +77,7 @@ void Stm()
 	}
 	else {
 		printf("Invalid Statement\n");
-		longjmp(errjmp, 1);
+		longjmp(errjmp, 1); // Jump back to getting a new file
 	}
 }
 
@@ -118,7 +117,7 @@ void Iffollow()
 	}
 	else {
 		printf("Incomplete if statement\n");
-		longjmp(errjmp, 1);
+		longjmp(errjmp, 1); // Jump back to getting a new file
 	}
 }
 
@@ -247,7 +246,7 @@ void Rel()
 		
 		default:
 			printf("Missing relational operator\n");
-			longjmp(errjmp, 1);
+			longjmp(errjmp, 1); // Jump back to getting a new file
 			break;
 	}
 }
@@ -261,14 +260,22 @@ int main(int argc, char** argv)
 		for (int i = 1; i < argc; i++) {
 			strcpy(filename, argv[i]);
 
+			// This block of code gets the file_name only, excluding the folder path
+      // So Inputs/filename will just be filename
 			char *base = strrchr(filename, '/');
 			base = (base != NULL) ? base + 1 : filename;
+			// We then output this to an Output folder
 			strcpy(outname, "Output/");
 			strcat(outname, base);
 			strcat(outname, "_output_parse.txt");
 
 			openfile(filename);
-			freopen(outname, "w", stdout);
+			freopen(outname, "w", stdout); // This line of code allows us to get
+         // the printf of this executable into a file
+         // https://stackoverflow.com/questions/29154056/redirect-stdout-to-a-file/29154180#29154180 
+
+			// this setjmp/longjmp is important for catching parse errors and
+			// still allowing the program to continue parsing the rest of the files.
 			if (setjmp(errjmp) == 0)
 			{
 				currenttoken = gettoken();
