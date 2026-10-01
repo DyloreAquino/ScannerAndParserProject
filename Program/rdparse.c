@@ -251,14 +251,21 @@ void Rel()
 
 int main(int argc, char** argv)
 {
-	char filename[50];
+	char filename[256];
+	char outname[300];
 	if (argc >= 2)
 	{
-		for (int i = 1; i < argc; i++)
-		{
+		for (int i = 1; i < argc; i++) {
 			strcpy(filename, argv[i]);
+
+			char *base = strrchr(filename, '/');
+			base = (base != NULL) ? base + 1 : filename;
+			strcpy(outname, "Output/");
+			strcat(outname, base);
+			strcat(outname, "_output_parse.txt");
+
 			openfile(filename);
-			freopen(strcat(filename, "_output.txt"), "a+", stdout);
+			freopen(outname, "w", stdout);
 			currenttoken = gettoken();
 			Prg();
 			printf("%s is a valid SimpCalc program\n", filename);
@@ -266,9 +273,9 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		strcpy(filename, "../Tests/InputFiles/samp3.txt");
+		strcpy(filename, "sample_input.txt");
 		openfile(filename);
-		freopen(strcat(filename, "_output.txt"), "a+", stdout);
+		freopen("sample_output_parse.txt", "w", stdout);
 		currenttoken = gettoken();
 		Prg();
 		printf("%s is a valid SimpCalc program\n", filename);

@@ -21,3 +21,11 @@ parser.exe: rdparse.o scan.o token.o
 
 clean:
 	rm *.exe *.o
+
+test-scanner: scanner.exe
+	./scanner.exe Inputs/*.txt
+	
+test-parser: parser.exe
+	./parser.exe Inputs/*.txt
+
+test: test-scanner test-parser
