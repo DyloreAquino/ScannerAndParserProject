@@ -139,7 +139,7 @@ const char *errormessage(int errnum)
         case 301: return "'=' expected after '!'";
         case 302: return "Invalid number";
         case 303: return "Unclosed string";
-        case 304: return "Illegal character"
+        case 304: return "Illegal character";
         default: return "Unspecified error";
     }
 }
