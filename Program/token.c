@@ -2,7 +2,7 @@
 
 /* names of tokens for display (space padding ensures neat formatting)*/
 const char *tokennames[] = {
-    // "Error       ",
+    "Error       ",
     "Assign      ",
     "Semicolon   ",
     "Comma       ",
