@@ -10,7 +10,7 @@ char current_state[10] = "none";
 
 void parseerror(char *message)
 {
-	printf("Parse error: %s (line #%i)\n", message, getlinenumber());
+	printf("Parse error: %s expected. (line #%i)\n", message, getlinenumber());
   exit(0);
 }
 
@@ -22,16 +22,7 @@ void match(int tokenid)
 {
 	if (currenttoken.id != tokenid)
 	{
-		char msg[100];
-
-		if (strcmp(current_state, "stm") == 0)
-			printf("Invalid Statement\n");
-		else if (strcmp(current_state, "iffollow") == 0)
-			printf("Incomplete if statement\n");
-		
-		strcpy(msg, tokennames[tokenid]);
-		strcat(msg, " expected.");
-		parseerror(msg);
+		parseerror(tokennames[tokenid]);
 	}
 	currenttoken = gettoken();
 }
@@ -47,15 +38,13 @@ void Blk()
 		currenttoken.id == TokenIdentifier ||
 		currenttoken.id == TokenPRINT ||
 		currenttoken.id == TokenIF
-	)
-	{
+	) {
 		Stm(); Blk();
 	}
 }
 
 void Stm()
 {
-	strcpy(current_state, "stm");
 	if (currenttoken.id == TokenIdentifier)
 	{
 		match(TokenIdentifier);
@@ -86,8 +75,8 @@ void Stm()
 	}
 	else {
 		printf("Invalid Statement\n");
+		exit(0);
 	}
-	strcpy(current_state, "none");
 }
 
 void Argfollow()
@@ -114,16 +103,20 @@ void Arg()
 
 void Iffollow()
 {
-	strcpy(current_state, "iffollow");
-	if (currenttoken.id == TokenELSE)
-	{
+	if (currenttoken.id == TokenELSE) {
 		match(TokenELSE);
 		Blk();
+		match(TokenENDIF);
+		match(TokenSemicolon);
+	} 
+	else if (currenttoken.id == TokenENDIF) {
+		match(TokenENDIF);
+		match(TokenSemicolon);
 	}
-
-	match(TokenENDIF);
-	match(TokenSemicolon);
-	strcpy(current_state, "none");
+	else {
+		printf("Incomplete if statement\n");
+		exit(0);
+	}
 }
 
 void Exp()
@@ -251,6 +244,7 @@ void Rel()
 		
 		default:
 			printf("Missing relational operator\n");
+			exit(0);
 			break;
 	}
 }
@@ -258,7 +252,7 @@ void Rel()
 int main(int argc, char** argv)
 {
    char filename[50];
-   strcpy(filename, "../Tests/InputFiles/samp3.txt");
+   strcpy(filename, "../Tests/InputFiles/samp4.txt");
    if (argc >= 2)
       strcpy(filename, argv[1]);
    openfile(filename);
