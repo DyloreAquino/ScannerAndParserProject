@@ -37,7 +37,7 @@
 // TODO: Add states
 int delta[16][23] = {
     /*         Lett Digi Newl Spac Tab  Equa Plus Hyph Aste Slas Colo Semi Coma LefP RigP Unds LesT GreT Excl Perd Doub EOFC Other */
-    /*   0 */ {   1,   2,   0,   0,   0,  15,  14,  31,  15,   0,  15, 102, 103, 104, 105,   1,  11,  10,   9, 302,   8, 114,   0 },
+    /*   0 */ {   1,   2,   0,   0,   0, 110, 107, 108,  14,  12,  15, 102, 103, 104, 105,   1,  11,  10,   9, 304,   8, 114, 304 }, // done
     /*   1 */ {   1,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21,  21 }, 
     /*   2 */ {  32,  32,  32,  32,  32,  13,  32,  32,  32,  32,  32,  32,  32,  32,  32,  32,  32,  32,  32,  32,  32,  32,  32 },
     /*   3 */ {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 },
@@ -140,7 +140,8 @@ const char *errormessage(int errnum)
     {
         case 301: return "'=' expected after '!'";
         case 302: return "Invalid number";
-        case 303: return "Unclosed string"
+        case 303: return "Unclosed string";
+        case 304: return "Illegal character"
         default: return "Unspecified error";
     }
 }
