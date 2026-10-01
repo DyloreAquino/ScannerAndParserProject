@@ -4,14 +4,17 @@
 #include <stdlib.h> 
 #include <stdio.h>
 #include <string.h>
+#include <setjmp.h>
 #include "scan.h"
+
+jmp_buf errjmp;
 
 char current_state[10] = "none";
 
 void parseerror(char *message)
 {
 	printf("Parse error: %s expected. (line #%i)\n", message, getlinenumber());
-	exit(0);
+	longjmp(errjmp, 1);
 }
 
 struct token currenttoken;
@@ -75,7 +78,7 @@ void Stm()
 	}
 	else {
 		printf("Invalid Statement\n");
-		exit(0);
+		longjmp(errjmp, 1);
 	}
 }
 
@@ -115,7 +118,7 @@ void Iffollow()
 	}
 	else {
 		printf("Incomplete if statement\n");
-		exit(0);
+		longjmp(errjmp, 1);
 	}
 }
 
@@ -244,7 +247,7 @@ void Rel()
 		
 		default:
 			printf("Missing relational operator\n");
-			exit(0);
+			longjmp(errjmp, 1);
 			break;
 	}
 }
@@ -266,9 +269,12 @@ int main(int argc, char** argv)
 
 			openfile(filename);
 			freopen(outname, "w", stdout);
-			currenttoken = gettoken();
-			Prg();
-			printf("%s is a valid SimpCalc program\n", filename);
+			if (setjmp(errjmp) == 0)
+			{
+				currenttoken = gettoken();
+				Prg();
+				printf("%s is a valid SimpCalc program\n", filename);
+			}
 		}
 	}
 	else
@@ -276,9 +282,12 @@ int main(int argc, char** argv)
 		strcpy(filename, "sample_input.txt");
 		openfile(filename);
 		freopen("sample_output_parse.txt", "w", stdout);
-		currenttoken = gettoken();
-		Prg();
-		printf("%s is a valid SimpCalc program\n", filename);
+		if (setjmp(errjmp) == 0)
+		{
+			currenttoken = gettoken();
+			Prg();
+			printf("%s is a valid SimpCalc program\n", filename);
+		}
 	}
    
 	return 0;

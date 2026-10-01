@@ -23,9 +23,11 @@ clean:
 	rm *.exe *.o
 
 test-scanner: scanner.exe
-	./scanner.exe Inputs/*.txt
-	
+	mkdir -p Output
+	./scanner.exe Input/*.txt
+
 test-parser: parser.exe
-	./parser.exe Inputs/*.txt
+	mkdir -p Output
+	./parser.exe Input/*.txt
 
 test: test-scanner test-parser
