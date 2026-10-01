@@ -6,10 +6,13 @@
 #include <string.h>
 #include "scan.h"
 
+int errorcount = 0;
+
 void parseerror(char *message)
 {
-   printf("Error: %s\n",message);
-   exit(0);
+	errorcount++;
+	printf("Symbol %s expected\n", message);
+//    exit(0);
 }
 
 struct token currenttoken;
@@ -18,21 +21,16 @@ struct token currenttoken;
 // Prints the token and the lexeme
 void match(int tokenid)
 {
-	if (currenttoken.id == tokenid)
+	if (currenttoken.id != tokenid)
 	{
-		printf("match %s (%s)\n", tokennames[tokenid], currenttoken.lexeme);
-		currenttoken = gettoken();
+		parseerror(tokennames[tokenid]);
 	}
-	else
-	{
-		printf("error\n");
-		currenttoken = gettoken();
-	}
+	currenttoken = gettoken();
 }
 
 void Prg()
 {
-	Blk(); EndOfFile();	
+	Blk(); match(TokenEndOfFile);	
 }
 
 void Blk()
@@ -49,12 +47,23 @@ void Blk()
 
 void Stm()
 {
+	int currenterror = errorcount;
+
 	if (currenttoken.id == TokenIdentifier)
 	{
 		match(TokenIdentifier);
 		match(TokenAssign);
 		Exp();
 		match(TokenSemicolon);
+
+		if (errorcount == currenterror)
+		{
+			printf("Assignment Statement Recognized\n");
+		}
+		else
+		{
+			printf("Invalid Statement\n");
+		}
 	}
 	else if (currenttoken.id == TokenPRINT)
 	{
@@ -64,14 +73,38 @@ void Stm()
 		Argfollow();
 		match(TokenRightParen);
 		match(TokenSemicolon);
+
+		if (errorcount == currenterror)
+		{
+			print("Print Statement Recognized");
+		}
+		else
+		{
+			printf("Invalid Statement\n");
+		}
 	}
-	else
+	else if (currenttoken.id == TokenIF)
 	{
 		match(TokenIF);
+		print("If Statement Begins");
 		Cnd();
 		match(TokenColon);
 		Blk();
 		Iffollow();
+		
+		if (errorcount == currenterror)
+		{
+			print("If Statement Ends\n");
+		}
+		else
+		{
+			printf("Invalid Statement\n");
+		}
+	}
+	else
+	{
+		printf("Invalid Statement\n");
+		currenttoken = gettoken();
 	}
 }
 
@@ -87,7 +120,7 @@ void Argfollow()
 
 void Arg()
 {
-	if (currenttoken.id = TokenString)
+	if (currenttoken.id == TokenString)
 	{
 		match(TokenString);
 	}
@@ -104,8 +137,15 @@ void Iffollow()
 		match(TokenELSE);
 		Blk();
 	}
+
+	int currenterror = errorcount;
 	match(TokenENDIF);
 	match(TokenSemicolon);
+
+	if (errorcount != currenterror)
+	{
+		printf("Incomplete if Statement\n");
+	}
 }
 
 void Exp()
@@ -230,6 +270,9 @@ void Rel()
 		case TokenLTEqual:
 			match(TokenLTEqual);
 			break;
+		
+		default:
+			syntaxerror("relational operator"); break;
 	}
 }
 
