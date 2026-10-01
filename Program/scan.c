@@ -1,4 +1,4 @@
-
+// Scanner module by Jerold Aquino and Andre Dorde
 /* this module defines a gettoken() function      */
 /* call openfile("filename") to set up the module */
 
@@ -33,6 +33,7 @@
 #define OTHER              22
     
 /* state transition table */
+/* this is based on the DFA we made*/
 int delta[16][23] = {
     /*         Lett Digi Newl Spac Tab  Equa Plus Hyph Aste Slas Colo Semi Coma LefP RigP Unds LesT GreT Excl Perd Doub EOFC Other */
     /*   0 */ {   1,   2,   0,   0,   0, 110, 107, 108,  14,  12,  15, 102, 103, 104, 105,   1,  11,  10,   9, 304,   8, 129, 304 },
@@ -71,6 +72,7 @@ int openfile(char *filename)
        printf("File not found.");
        exit(1);
     }
+    // For scanning multiple files, after every file we must reset linenum, back to 1
     linenum = 1;
     return 0;
 }
@@ -89,7 +91,6 @@ char mygetchar()
     }
     /*    printf("-->%d\n", charread); */
     return charread;
-
 }
     
 int getlinenumber()
@@ -99,10 +100,11 @@ int getlinenumber()
 
 int charclass(char c)
 {
+    // Gets any alphabetical element
     if (((c >= 'a') && (c <= 'z')) || 
         ((c >= 'A') && (c <= 'Z')))
         return LETTER;
-
+    // Gets any numerical element
     if ((c>='0') && (c<='9'))
         return DIGIT;
     
@@ -158,13 +160,15 @@ struct token gettoken()
         placeholder[0] = c;
         int ch = charclass(c);
 
+        // In here is a special if statement for the e or E 
+        // for exponential numbers. It directs it to
+        // state 5.
         if ((c == 'e' || c == 'E') && (state == 2 || state == 4)) {
             state = 5;
         } else {
             state = delta[state][ch];
         }
         
-        // printf("class:%d(%c) -> state %d\n", ch, c, state);
         if (state == 0)
         /* reset if brought back to state 0 (white spaces and comments) */
             strcpy(temp.lexeme,"");
@@ -179,6 +183,9 @@ struct token gettoken()
     }
     else if (state >= 200) /* 20 plus means valid token with pushback */
     {
+        // Another special if statement for identifiers with reserved words
+        // Here we just change the token id based on the lexeme. else, just 
+        // make it an identifier.
         if (state == 214) {
             if (strcmp(temp.lexeme, "PRINT") == 0)
                 temp.id = TokenPRINT;
