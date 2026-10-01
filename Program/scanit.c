@@ -8,7 +8,7 @@
 int main(int argc, char** argv)
 {
    char filename[50];
-   strcpy(filename,"sample_input.txt");	
+   strcpy(filename,"../Tests/InputFiles/samp3.txt");	
    if (argc >= 2)
       strcpy(filename,argv[1]);
    openfile(filename);

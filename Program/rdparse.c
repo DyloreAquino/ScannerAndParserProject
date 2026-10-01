@@ -251,23 +251,24 @@ void Rel()
 
 int main(int argc, char** argv)
 {
-    char filename[50];
-    if (argc >= 2)
-    {
-	    for (int i = 1; i < argc; i++)
-	    {
+	char filename[50];
+	if (argc >= 2)
+	{
+		for (int i = 1; i < argc; i++)
+		{
 			strcpy(filename, argv[i]);
 			openfile(filename);
 			freopen(strcat(filename, "_output.txt"), "a+", stdout);
 			currenttoken = gettoken();
 			Prg();
 			printf("%s is a valid SimpCalc program\n", filename);
-	    }
-    }
+		}
+	}
 	else
 	{
-		strcpy(filename, "sample_input.txt");
+		strcpy(filename, "../Tests/InputFiles/samp3.txt");
 		openfile(filename);
+		freopen(strcat(filename, "_output.txt"), "a+", stdout);
 		currenttoken = gettoken();
 		Prg();
 		printf("%s is a valid SimpCalc program\n", filename);
