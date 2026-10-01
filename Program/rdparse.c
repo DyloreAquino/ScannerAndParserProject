@@ -76,7 +76,7 @@ void Stm()
 
 		if (errorcount == currenterror)
 		{
-			print("Print Statement Recognized");
+			printf("Print Statement Recognized\n");
 		}
 		else
 		{
@@ -86,7 +86,7 @@ void Stm()
 	else if (currenttoken.id == TokenIF)
 	{
 		match(TokenIF);
-		print("If Statement Begins");
+		printf("If Statement Begins\n");
 		Cnd();
 		match(TokenColon);
 		Blk();
@@ -94,7 +94,7 @@ void Stm()
 		
 		if (errorcount == currenterror)
 		{
-			print("If Statement Ends\n");
+			printf("If Statement Ends\n");
 		}
 		else
 		{
@@ -272,14 +272,16 @@ void Rel()
 			break;
 		
 		default:
-			syntaxerror("relational operator"); break;
+			parseerror("relational operator");
+			printf("Missing relational operator");
+			break;
 	}
 }
 
 int main(int argc, char** argv)
 {
-   char filename[20];
-   strcpy(filename, "test1.txt");
+   char filename[50];
+   strcpy(filename, "../Tests/InputFiles/sample1-quad-formula.txt");
    if (argc >= 2)
       strcpy(filename, argv[1]);
    openfile(filename);

@@ -44,7 +44,7 @@ int main(int argc, char** argv)
          sum += number;
          t = gettoken();
       }
-      if (t.id != TokenEquals)
+      if (t.id != TokenEqual)
          parseerror("== expected");
       printf("the sum is: %d\n",sum);
       t = gettoken();
