@@ -71,6 +71,7 @@ int openfile(char *filename)
        printf("File not found.");
        exit(1);
     }
+    linenum = 1;
     return 0;
 }
 
