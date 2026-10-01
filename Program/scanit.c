@@ -7,8 +7,8 @@
 
 int main(int argc, char** argv)
 {
-   char filename[20];
-   strcpy(filename,"test1.txt");	
+   char filename[50];
+   strcpy(filename,"../Tests/InputFiles/sample1-quad-formula.txt");	
    if (argc >= 2)
       strcpy(filename,argv[1]);
    openfile(filename);
