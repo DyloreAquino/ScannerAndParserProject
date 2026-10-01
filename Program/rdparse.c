@@ -252,7 +252,7 @@ void Rel()
 int main(int argc, char** argv)
 {
    char filename[50];
-   strcpy(filename, "../Tests/InputFiles/samp4.txt");
+   strcpy(filename, "sample_input.txt");
    if (argc >= 2)
       strcpy(filename, argv[1]);
    openfile(filename);
